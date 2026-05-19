@@ -36,9 +36,10 @@ export default function App() {
     currentTime: 0, playing: false, zoom: 100, snapEnabled: true,
     selectedClipId: null, selectedTrackId: null, mediaBin: [],
   });
-  const [tool, setTool] = useState<string>("select");
   const [exportOpen, setExportOpen] = useState(false);
+  const [tool, setTool] = useState<string>("select");
   const [panelOpen, setPanelOpen] = useState<string | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
   const playerRef = useRef<HTMLCanvasElement>(null);
   const undoRef = useRef(new UndoRedo());
   const projectRef = useRef(state.project);
@@ -221,11 +222,21 @@ export default function App() {
         onSplit={splitClip}
         tool={tool}
         onSetTool={setTool}
-        onSave={() => saveProjectNative(state.project)}
-        onLoad={async () => {
-          const proj = await loadProject();
-          if (proj) setState(prev => ({ ...prev, project: proj }));
-        }}
+                    onSave={() => {
+                      saveProjectNative(state.project);
+                      setToast({ message: "Project saved!", type: "success" });
+                      setTimeout(() => setToast(null), 3000);
+                    }}
+                    onLoad={async () => {
+                      const proj = await loadProject();
+                      if (proj) {
+                        setState(prev => ({ ...prev, project: proj }));
+                        setToast({ message: "Project loaded!", type: "success" });
+                      } else {
+                        setToast({ message: "No project selected", type: "info" });
+                      }
+                      setTimeout(() => setToast(null), 3000);
+                    }}
         onAddText={addTextClip}
         canUndo={undoRef.current.canUndo()}
         canRedo={undoRef.current.canRedo()}
@@ -305,7 +316,25 @@ export default function App() {
 
       {/* Dialogs */}
       {exportOpen && (
-        <ExportDialog onClose={() => setExportOpen(false)} project={state.project} />
+        <ExportDialog onClose={() => {
+          setExportOpen(false);
+          if (document.querySelector('a[download]')) {
+            setToast({ message: "Video downloaded!", type: "success" });
+            setTimeout(() => setToast(null), 3000);
+          }
+        }} project={state.project} />
+      )}
+
+      {/* Toast notification */}
+      {toast && (
+        <div className={`fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-lg shadow-lg text-sm font-medium transition-all animate-in ${
+          toast.type === 'success' ? 'bg-green-600 text-white' :
+          toast.type === 'error' ? 'bg-red-600 text-white' : 'bg-gray-700 text-gray-200'
+        }`}>
+          {toast.type === 'success' && <span className="mr-1.5">✓</span>}
+          {toast.type === 'error' && <span className="mr-1.5">✕</span>}
+          {toast.message}
+        </div>
       )}
     </div>
   );
