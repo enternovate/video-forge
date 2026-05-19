@@ -134,7 +134,7 @@ export function ExportDialog({ onClose, project }: ExportDialogProps) {
       encoder.close();
 
       // Create WebM file from chunks
-      const blob = new Blob(chunks, { type: format === "webm" ? "video/webm" : "video/mp4" });
+      const blob = new Blob(chunks as unknown as BlobPart[], { type: format === "webm" ? "video/webm" : "video/mp4" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
