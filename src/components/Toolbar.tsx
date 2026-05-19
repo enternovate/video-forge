@@ -11,6 +11,11 @@ interface ToolbarProps {
   onSave: () => void; onLoad: () => Promise<void>;
   onAddText: () => void;
   canUndo: boolean; canRedo: boolean;
+  isMobile?: boolean;
+  onToggleMedia?: () => void;
+  onTogglePanel?: () => void;
+  mobileMenu?: string | null;
+  onHamburger?: () => void;
 }
 
 export function Toolbar({
@@ -19,9 +24,16 @@ export function Toolbar({
   onUndo, onRedo, snapEnabled, onToggleSnap,
   zoom, onZoomChange, onSplit, tool, onSetTool,
   onSave, onLoad, onAddText, canUndo, canRedo,
+  isMobile, onToggleMedia, onTogglePanel, mobileMenu,
+  onHamburger,
 }: ToolbarProps) {
   return (
-    <div className="h-11 bg-gray-900 border-b border-gray-800 flex items-center px-2 gap-1 shrink-0 overflow-x-auto">
+    <div className="h-11 bg-gray-900 border-b border-gray-800 flex items-center px-2 gap-1 shrink-0 overflow-x-auto toolbar-wrap">
+      {isMobile && (
+        <ToolBtn onClick={onHamburger} label="Menu">
+          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
+        </ToolBtn>
+      )}
       <ToolBtn onClick={onImport} label="Import" shortcut="Ctrl+I">
         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
@@ -85,6 +97,16 @@ export function Toolbar({
       </ToolBtn>
 
       <div className="ml-auto flex items-center gap-1">
+        {isMobile && (
+          <>
+            <ToolBtn onClick={onToggleMedia} active={mobileMenu === 'media'} label="Media">
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><polygon points="10 8 16 12 10 16 10 8" /></svg>
+            </ToolBtn>
+            <ToolBtn onClick={onTogglePanel} active={mobileMenu === 'panel'} label="Properties" disabled={!document.querySelector('.timeline-clip.selected')}>
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9" /><path d="M3 20h3" /><path d="M12 4h9" /><path d="M3 4h3" /><path d="M12 12h9" /><path d="M3 12h3" /></svg>
+            </ToolBtn>
+          </>
+        )}
         <ToolBtn onClick={onAddText} label="Add text/title">
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="4 7 4 4 20 4 20 7" /><line x1="9" y1="20" x2="15" y2="20" /><line x1="12" y1="4" x2="12" y2="20" /></svg>
         </ToolBtn>

@@ -21,6 +21,7 @@ interface TimelineProps {
   onDropMedia: (mediaId: string, trackId: string, time: number) => void;
   mediaBin: MediaItem[];
   tool?: string;
+  isMobile?: boolean;
 }
 
 const TRACK_H = 48;
@@ -31,7 +32,7 @@ export function Timeline({
   tracks, currentTime, duration, zoom, snapEnabled,
   selectedClipId, selectedTrackId,
   onSelectClip, onSelectTrack, onSeek, onUpdateClip, onUpdateClipUndoable,
-  onDeleteClip, onAddTrack, onDeleteTrack, onDropMedia, mediaBin, tool,
+  onDeleteClip, onAddTrack, onDeleteTrack, onDropMedia, mediaBin, tool, isMobile,
 }: TimelineProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dragState, setDragState] = useState<{
@@ -121,7 +122,8 @@ export function Timeline({
   }, [zoom, snapTime, onDropMedia]);
 
   return (
-    <div className="h-52 bg-gray-900 border-t border-gray-800 flex flex-col shrink-0" ref={containerRef}>
+    <div className="h-52 bg-gray-900 border-t border-gray-800 flex flex-col shrink-0" ref={containerRef}
+      style={{ height: isMobile ? '35vh' : undefined }}>
       {/* Ruler */}
       <div className="h-6 bg-gray-850 border-b border-gray-800 flex items-end relative" style={{ minWidth: totalWidth }}>
         <div className="absolute left-16 right-0 bottom-0 h-full">
