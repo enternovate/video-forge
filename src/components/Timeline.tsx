@@ -14,11 +14,13 @@ interface TimelineProps {
   onSelectTrack: (id: string | null) => void;
   onSeek: (t: number) => void;
   onUpdateClip: (id: string, updates: Partial<Clip>) => void;
+  onUpdateClipUndoable?: (id: string, updates: Partial<Clip>) => void;
   onDeleteClip: (id: string) => void;
   onAddTrack: (type: Track['type']) => void;
   onDeleteTrack: (id: string) => void;
   onDropMedia: (mediaId: string, trackId: string, time: number) => void;
   mediaBin: MediaItem[];
+  tool?: string;
 }
 
 const TRACK_H = 48;
@@ -28,8 +30,8 @@ const RULER_H = 24;
 export function Timeline({
   tracks, currentTime, duration, zoom, snapEnabled,
   selectedClipId, selectedTrackId,
-  onSelectClip, onSelectTrack, onSeek, onUpdateClip, onDeleteClip,
-  onAddTrack, onDeleteTrack, onDropMedia, mediaBin,
+  onSelectClip, onSelectTrack, onSeek, onUpdateClip, onUpdateClipUndoable,
+  onDeleteClip, onAddTrack, onDeleteTrack, onDropMedia, mediaBin, tool,
 }: TimelineProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dragState, setDragState] = useState<{

@@ -24,22 +24,38 @@ export interface Clip {
   sourceWidth?: number;
   sourceHeight?: number;
   sourceDuration?: number;
-  startTime: number;   // position on timeline (seconds)
-  duration: number;     // trimmed duration (seconds)
-  offset: number;       // offset into source (seconds)
-  speed: number;        // playback speed multiplier
-  volume: number;       // 0-1
-  opacity: number;      // 0-1
-  x: number;            // position in frame
+  startTime: number;
+  duration: number;
+  offset: number;
+  speed: number;
+  volume: number;
+  opacity: number;
+  x: number;
   y: number;
-  scale: number;        // 0.1-5
-  rotation: number;     // degrees
+  scale: number;
+  rotation: number;
   effects: Effect[];
   transitions: { start?: Transition; end?: Transition };
+  keyframes: Keyframe[];
   textContent?: string;
   textFont?: string;
   textSize?: number;
   textColor?: string;
+  textStroke?: string;
+  textStrokeWidth?: number;
+  textShadow?: string;
+  locked: boolean;
+  enabled: boolean;
+}
+
+export interface Keyframe {
+  id: string;
+  time: number; // relative to clip start
+  properties: Partial<{
+    x: number; y: number; scale: number; rotation: number;
+    opacity: number; volume: number; speed: number;
+  }>;
+  easing: 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'bounce';
 }
 
 export interface Transition {
