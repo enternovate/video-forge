@@ -13,6 +13,7 @@ import { ColorPanel } from "./components/ColorPanel";
 import { KeyframePanel } from "./components/KeyframePanel";
 import { TitlePanel } from "./components/TitlePanel";
 import { ExportDialog } from "./components/ExportDialog";
+import { WelcomeGuide } from "./components/WelcomeGuide";
 
 const DEFAULT_FPS = 30;
 const PROJECT_W = 1920;
@@ -249,13 +250,17 @@ export default function App() {
 
         {/* Center: Player + Timeline */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          <Player
-            ref={playerRef}
-            currentTime={state.currentTime}
-            playing={state.playing}
-            project={state.project}
-            selectedClipId={state.selectedClipId}
-          />
+          {state.project.tracks.some(t => t.clips.length > 0) ? (
+            <Player
+              ref={playerRef}
+              currentTime={state.currentTime}
+              playing={state.playing}
+              project={state.project}
+              selectedClipId={state.selectedClipId}
+            />
+          ) : (
+            <WelcomeGuide onImport={importMedia} />
+          )}
 
           {/* Properties panel (when clip selected) */}
           {selectedClip && (
